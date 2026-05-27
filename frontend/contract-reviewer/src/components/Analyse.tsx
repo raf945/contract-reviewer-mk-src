@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { applyHighlights,type HighlightResult, } from '@/components/utils/highlight';
 import { Loader2 } from 'lucide-react';
+const API_BASE = import.meta.env.VITE_API_URL;
 
 
 type GPTAlert = {
@@ -60,7 +61,7 @@ const handleClick = async (
   setIsAnalysing(true)
 
   try {
-    const response = await fetch('http://127.0.0.1:8000/api/analyse/azure', {
+    const response = await fetch(`${API_BASE}/files/upload_pdf`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json;charset=UTF-8',
