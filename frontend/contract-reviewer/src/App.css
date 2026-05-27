@@ -1,0 +1,18 @@
+.react-pdf__Page__textContent .azure-highlight {
+  border-radius: 2px;
+  mix-blend-mode: multiply;
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+
+.react-pdf__Page__textContent .azure-highlight:hover {
+  filter: brightness(0.9);
+}
+
+.azure-highlight--clause               { background-color: rgba(251, 146,  60, 0.45); } /* orange */
+.azure-highlight--section_headings     { background-color: rgba( 96, 165, 250, 0.45); } /* blue   */
+.azure-highlight--sub_headings         { background-color: rgba(103, 232, 249, 0.50); } /* cyan   */
+.azure-highlight--preamble_and_parties { background-color: rgba(192, 132, 252, 0.40); } /* purple */
+.azure-highlight--recitals             { background-color: rgba(244, 114, 182, 0.40); } /* pink   */
+.azure-highlight--definitions          { background-color: rgba( 74, 222, 128, 0.40); } /* green  */
+.azure-highlight--other                { background-color: rgba(156, 163, 175, 0.40); } /* gray   */
