@@ -83,7 +83,7 @@ function Dashboard(){
       try {
         // Connect fetch api to bucket
         console.log("API BASE:", import.meta.env.VITE_API_BASE);
-        const result = await fetch(`${API_BASE}/files/upload_pdf`, {
+        const result = await fetch(`/api/files/upload_pdf`, {
           method: 'POST',
           body: formData,
         });
