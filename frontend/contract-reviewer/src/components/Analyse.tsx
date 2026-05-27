@@ -61,7 +61,7 @@ const handleClick = async (
   setIsAnalysing(true)
 
   try {
-    const response = await fetch(`/api/files/upload_pdf`, {
+    const response = await fetch(`/api/analyse/azure`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json;charset=UTF-8',
