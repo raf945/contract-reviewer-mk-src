@@ -14,7 +14,7 @@ from app.agent.classify_text import ClassifyText
 from app.agent.system_prompt import data
 from app.agent.explain_text_rag import ExplainText
 
-router = APIRouter(prefix='/api/analyse', tags=['analyse'])
+router = APIRouter(prefix='/analyse', tags=['analyse'])
 
 load_dotenv()
 
@@ -48,11 +48,12 @@ async def azure_scan(file: pdf):
         )
 
     poller = document_intelligence.begin_analyze_document(
-        "prebuilt-read", body={'urlSource': file.fileName}, pages=file.pageNumber
+        "prebuilt-read", body={'urlSource': file.fileName}, pages=str(file.pageNumber)
     )
 
     contract = poller.result()
-    content = [paragraph.content for paragraph in contract.paragraphs]
+    paragraphs = contract.paragraphs or []
+    content = [paragraph.content for paragraph in paragraphs]
     
     classify = ClassifyText()
     

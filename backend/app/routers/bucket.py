@@ -3,7 +3,7 @@ import logging
 from typing import Annotated
 from pathlib import Path
 
-from fastapi import APIRouter, File, UploadFile, Request
+from fastapi import APIRouter, File, UploadFile, Request, HTTPException
 import boto3
 from botocore.exceptions import ClientError
 
@@ -28,12 +28,15 @@ def upload_file(file_name, bucket, object_name=None) -> bool:
         return False
     return True
 
-router = APIRouter(prefix='/api/files', tags=['files'])
+router = APIRouter(prefix='/files', tags=['files'])
 
 
 @router.post('/upload_pdf', tags=['files'])
 async def upload_pdf(file: UploadFile):
     print('backend upload reached')
+
+    if file.filename is None:
+        raise HTTPException(status_code=400, detail="Missing filename")
     
     # Find upload directory and output to there
     current_folder = Path(__file__).resolve().parent.parent

@@ -8,11 +8,14 @@ from .models.HealthCheck import HealthCheck
 from .routers.bucket import router as files_router
 from .routers.azure import router as analyse_router
 
-app = FastAPI()
+app = FastAPI(root_path="/api")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['http://localhost:5173/', 'https://contract-reviewer-xyae8.ondigitalocean.app/'],
+    allow_origins=[
+        'http://localhost:5173', 
+        'https://contract-reviewer-xyae8.ondigitalocean.app'
+        ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
