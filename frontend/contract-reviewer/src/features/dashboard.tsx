@@ -6,7 +6,6 @@ import { MainPage } from '@/components/MainPage'
 import { PageControls } from '@/components/PageControls'
 import type { HighlightResult } from '@/components/utils/highlight';
 import { Loader2 } from 'lucide-react';
-const API_BASE = import.meta.env.VITE_API_URL;
 
 type GPTAlert = {
   segmentIndex: number;
@@ -82,7 +81,6 @@ function Dashboard(){
       
       try {
         // Connect fetch api to bucket
-        console.log("API BASE:", import.meta.env.VITE_API_BASE);
         const result = await fetch(`/api/files/upload_pdf`, {
           method: 'POST',
           body: formData,

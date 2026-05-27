@@ -1,8 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { applyHighlights,type HighlightResult, } from '@/components/utils/highlight';
 import { Loader2 } from 'lucide-react';
-const API_BASE = import.meta.env.VITE_API_URL;
-
 
 type GPTAlert = {
   segmentIndex: number;
