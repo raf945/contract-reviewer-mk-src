@@ -50,7 +50,7 @@ Demo available at [Contract Reviewer](https://contract-reviewer-xyae8.ondigitalo
 
 The full research lifecycle: dataset construction → annotation → cleaning → visualisation → three controlled experiments → evaluation and model selection.
 
-!(https://github.com/raf945/contract-reviewer-mk-src/blob/main/Phase-1-End-to-End-Pipeline.png)
+![Pipeline](https://github.com/raf945/contract-reviewer-mk-src/blob/main/Phase-1-End-to-End-Pipeline.png)
 
 ### Dataset Construction & Annotation
 
