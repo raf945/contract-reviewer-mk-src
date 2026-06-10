@@ -218,12 +218,6 @@ Both terminal windows must be open and running the appropriate commands
 
 When you want to end the session, press CRTL + C at the same time in both terminals
 
-### Logging into frontend
-The email is: hugo@email.com, raf.thalos@gmail.com
-The password is: hugo, DogCastle123!
-
-Any questions email: S5633681@bournemouth.ac.uk
-
 ### Environment Variables
 
 For backend ENV variables, open .env and fill out with your API keys or request them from S5633681 Raf Christensen
