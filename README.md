@@ -112,7 +112,7 @@ Although Condition B edged ahead on macro-F1, **Condition A (zero-shot GPT 5.4 m
 
 ### Architecture
 
-![Architecture](https://github.com/raf945/contract-reviewer-mk-src/blob/main/Phase-1-End-to-End-Pipeline.png)
+![Architecture](https://github.com/raf945/contract-reviewer-mk-src/blob/main/Phase-2-Architecture.png)
 
 How the components interact, end to end:
 
