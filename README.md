@@ -112,22 +112,7 @@ Although Condition B edged ahead on macro-F1, **Condition A (zero-shot GPT 5.4 m
 
 ### Architecture
 
-```mermaid
-flowchart LR
-    U[User] -->|Login| SA[Supabase Auth]
-    U -->|Upload PDF| FE[React Frontend]
-    FE -->|POST /api/files| BE[FastAPI Backend]
-    BE -->|Store PDF| DO[(DigitalOcean Spaces)]
-    DO -->|Presigned URL| BE
-    BE -->|Presigned URL| ADI[Azure Document Intelligence]
-    ADI -->|Extracted segments| CLS[GPT 5.4 mini classifier]
-    CLS -->|Clauses| RAG[RAG retrieval]
-    ADI -->|Full-document scan| EMB[OpenAI text-embedding-3-small]
-    EMB -->|1536-d vectors| QD[(Qdrant)]
-    QD -->|"Top-k 7, cosine ≥ 0.8"| RAG
-    RAG -->|Clause + label + context| GPT[GPT 5.4 explainer]
-    GPT -->|Explanation + client risk| FE
-```
+![Architecture](https://github.com/raf945/contract-reviewer-mk-src/blob/main/poster.png)
 
 How the components interact, end to end:
 
