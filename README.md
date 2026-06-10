@@ -4,10 +4,10 @@
 
 An LLM-powered contract reviewer built with a two-phase design methodology:
 
-1. **Phase 1 — End-to-end ML pipeline.** Three architecturally distinct classifiers (zero-shot GPT 5.4 mini, GPT 5.4 mini + RAG, and a fine-tuned Legal-BERT) were trained/configured and evaluated on a custom, lawyer-annotated dataset of **3,548 contract segments** to find the best model for *contract segment classification* — building structural awareness of a contract (what is a clause, a heading, a definition, etc.).
+1. **Phase 1 — End-to-end ML pipeline.** Three architecturally distinct classifiers (zero-shot GPT 5.4 mini, GPT 5.4 mini + RAG, and a fine-tuned Legal-BERT) were trained/configured and evaluated on a custom, lawyer-annotated dataset of **3,548 contract segments** to find the best model for *contract segment classification* building structural awareness of a contract (what is a clause, a heading, a definition, etc.).
 2. **Phase 2 — Full-stack implementation.** The winning classifier is integrated into a deployed web application that extracts clauses from any uploaded contract PDF, then uses **GPT 5.4 with retrieved context (RAG)** to produce plain-English explanations and a client-facing risk analysis for each clause.
 
-The project demonstrates that accurate segment classification unlocks downstream tasks — clause extraction, explanation and risk analysis — that could meaningfully reduce billable hours for legal practitioners.
+The project demonstrates that accurate segment classification unlocks downstream tasks such as clause extraction, explanation and risk analysis that could meaningfully reduce billable hours for legal practitioners.
 
 Demo available at [Contract Reviewer](https://contract-reviewer-xyae8.ondigitalocean.app/)
 
@@ -58,7 +58,7 @@ The full research lifecycle: dataset construction → annotation → cleaning �
 - Each contract was scanned with **Azure Document Intelligence**, extracting segments with positional metadata into JSON.
 - A **qualified UK lawyer and a second-year law student** annotated every segment in **Label Studio**, self-hosted on a DigitalOcean Droplet, against an agreed seven-class taxonomy grounded in prior literature.
 - Annotations were cleaned and normalised with **pandas** (`experiments/clean_data.ipynb`): label simplification, column pruning and per-contract CSV export.
-- The data was **split by document** — not by row — to prevent cross-contamination between sets:
+- The data was **split by document** not by row to prevent cross-contamination between sets:
 
 | Split | Contracts | Segments |
 |---|---|---|
@@ -69,13 +69,13 @@ The full research lifecycle: dataset construction → annotation → cleaning �
 
 ### Dataset Visualisation
 
-Exploratory analysis (`experiments/distribution.ipynb`, Matplotlib) revealed a **strong class imbalance**: clause, other and definitions dominate, while recitals and sub-headings are rare. This directly informed two decisions — weighted class loss was tested when fine-tuning Legal-BERT, and macro-F1 (which treats all classes equally) was chosen as the primary metric.
+Exploratory analysis (`experiments/distribution.ipynb`, Matplotlib) revealed a **strong class imbalance**: clause, other and definitions dominate, while recitals and sub-headings are rare. This directly informed two decisions, weighted class loss was tested when fine-tuning Legal-BERT, and macro-F1 (which treats all classes equally) was chosen as the primary metric.
 
 ### Model Configurations — Three Experimental Conditions
 
 | Condition | Setup |
 |---|---|
-| **A — Zero-shot GPT 5.4 mini** | Structured output parser (Pydantic) enforcing valid labels, full class taxonomy in the system prompt, temperature 0 for reproducibility. |
+| **A  Zero-shot GPT 5.4 mini** | Structured output parser (Pydantic) enforcing valid labels, full class taxonomy in the system prompt, temperature 0 for reproducibility. |
 | **B — GPT 5.4 mini + RAG** | Same as A, plus ground-truth labelled examples embedded with the local sentence transformer `BAAI/bge-base-en-v1.5` (768 dims) and stored in Qdrant. At inference, the top-k 5 examples with cosine similarity ≥ 0.7 are injected into the prompt. |
 | **C — Fine-tuned Legal-BERT** | `nlpaueb/legal-bert-base-uncased` with a classification head fine-tuned to output the seven classes. |
 
@@ -83,7 +83,7 @@ All three conditions were evaluated on the **same held-out test set of 802 segme
 
 ### Fine-Tuning Legal-BERT
 
-**Why Legal-BERT?** It is a bidirectional encoder pre-trained on extensive legal corpora, and prior work showed domain-adapted BERT variants outperforming generalist LLMs on contract clause tasks — making it the strongest non-LLM candidate to test.
+**Why Legal-BERT?** It is a bidirectional encoder pre-trained on extensive legal corpora, and prior work showed domain-adapted BERT variants outperforming generalist LLMs on contract clause tasks, making it the strongest non-LLM candidate to test.
 
 **Setup:** Hugging Face `Trainer` API on a Google Colab **L4 GPU**, across **nine distinct fine-tuning experiments** (`experiments/Condition_C_Finetune_GPUONLY.ipynb`), with a fixed seed (67) for reproducibility, max sequence length 512, bf16 precision, 10 epochs and early stopping (patience 2) using the validation set in the evaluation loop.
 
@@ -106,7 +106,7 @@ All three conditions were evaluated on the **same held-out test set of 802 segme
 | B — GPT 5.4 mini + RAG | 0.53 |
 | C — Fine-tuned Legal-BERT | 0.51 |
 
-Although Condition B edged ahead on macro-F1, **Condition A (zero-shot GPT 5.4 mini) was selected for deployment**. The deciding factor was fitness for the downstream task: clause explanation depends on correctly identifying clauses, and Condition A achieved **0.90 precision on the clause class** — higher than the RAG variant — together with higher clause recall than Legal-BERT. In other words, when the deployed system says "this is a clause", it is right 9 times out of 10.
+Although Condition B edged ahead on macro-F1, **Condition A (zero-shot GPT 5.4 mini) was selected for deployment**. The deciding factor was fitness for the downstream task: clause explanation depends on correctly identifying clauses, and Condition A achieved **0.90 precision on the clause class**, higher than the RAG variant and together with a higher clause recall than Legal-BERT. In other words, when the deployed system says "this is a clause", it is right 9 times out of 10.
 
 ---
 
@@ -151,7 +151,7 @@ How the components interact, end to end:
 RAG appears in **two distinct roles** across the project:
 
 - **Phase 1 (classification support):** ground-truth *labelled* examples from the training set were embedded and retrieved as few-shot context to test whether retrieval improves classification accuracy (Condition B).
-- **Phase 2 (explanation grounding):** the *unlabelled* full document is embedded into a per-PDF Qdrant collection. When explaining a clause, the system retrieves the most semantically similar passages from elsewhere in the same contract (top-k 7, cosine ≥ 0.8) — definitions, related obligations, cross-referenced terms — so GPT 5.4's explanation is grounded in the document itself rather than relying on its general knowledge. This mirrors how a lawyer reads a clause: in the context of the whole agreement, reducing hallucination risk.
+- **Phase 2 (explanation grounding):** the *unlabelled* full document is embedded into a per-PDF Qdrant collection. When explaining a clause, the system retrieves the most semantically similar passages from elsewhere in the same contract (top-k 7, cosine ≥ 0.8) definitions, related obligations, cross-referenced terms so that way GPT 5.4's explanation is grounded in the document itself rather than relying on its general knowledge. This mirrors how a lawyer reads a clause: in the context of the whole agreement, reducing hallucination risk.
 
 ### Deployment
 
@@ -181,13 +181,13 @@ The application is deployed on **DigitalOcean App Platform** as a proof of conce
 
 ## Evaluation Highlights
 
-- All three classifiers were compared on an identical, document-held-out test set against lawyer-annotated ground truth — macro-F1 as the primary metric, plus per-class precision/recall/F1 and confusion matrices.
+- All three classifiers were compared on an identical, document-held-out test set against lawyer-annotated ground truth with macro-F1 as the primary metric, plus per-class precision/recall/F1 and confusion matrices.
 - The deployed explanation pipeline was qualitatively reviewed by the two legal annotators across nine clause-explanation sets; both found the explanations accurate and easy to comprehend.
-- Notable finding: the generalist zero-shot LLM matched or beat the domain-adapted, fine-tuned Legal-BERT on this task — likely due to the modest fine-tuning dataset size (2,354 segments) and class imbalance — a result that runs counter to parts of the prior literature.
+- Notable finding: the generalist zero-shot LLM matched or beat the domain-adapted, fine-tuned Legal-BERT on this task was likely due to the modest fine-tuning dataset size (2,354 segments) and class imbalance, a result that runs counter to parts of the prior literature.
 
 ## Acknowledgements
 
-Contracts were annotated by a qualified UK lawyer and a second-year law student. System prompts were drafted with LLM assistance and reviewed by a legal practitioner. Built as a BSc (Hons) Computer Science final-year project (2026).
+Contracts were annotated by a qualified UK lawyer and a second-year law student. System prompts were drafted with LLM assistance and reviewed by a legal practitioner.
 
 ## Getting Started
 
