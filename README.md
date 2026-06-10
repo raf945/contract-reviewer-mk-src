@@ -10,6 +10,7 @@ An LLM-powered contract reviewer built with a two-phase design methodology:
 The project demonstrates that accurate segment classification unlocks downstream tasks — clause extraction, explanation and risk analysis — that could meaningfully reduce billable hours for legal practitioners.
 
 Demo available at [Contract Reviewer](https://contract-reviewer-xyae8.ondigitalocean.app/)
+
 **Send a message to my linkedin to get access!**
 
 ---
